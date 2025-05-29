@@ -9,6 +9,9 @@ using RecipeBook.Exceptions.ExceptionsBase;
 
 namespace RecipeBook.Application.UseCases.User.Register
 {
+    /// <summary>
+    /// internal/public 
+    /// </summary>
     public class RegisterUserUseCase : IRegisterUserUseCase
     {
         private readonly IUserReadOnlyRepository _iuserReadOnlyRepository;
