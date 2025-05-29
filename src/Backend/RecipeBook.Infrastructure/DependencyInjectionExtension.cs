@@ -24,6 +24,15 @@ namespace RecipeBook.Infrastructure
         /// <param name="services"></param>
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            AddRepositories(services);
+
+            // método que vai verificar se o ambiente é de teste integração.
+            if (configuration.IsUnitTestEnvironment())
+            {
+                return;
+            }
+
+            // método que vai pegar a string de conexão do banco de dados e o tipo do banco de dados.
             var databaseType = configuration.DatabaseType();
 
             if (databaseType == DatabaseType.SQLServer)
@@ -31,9 +40,6 @@ namespace RecipeBook.Infrastructure
                 AddDbContextSqlServer(services, configuration);
                 AddFluentMigrator_SqlServer(services, configuration);
             }
-            
-            AddRepositories(services);
-            
         } 
         /// <summary>
         /// Configuração do DbContext com SQL Server onde referencio a classe de DbContext em AddDbContext.

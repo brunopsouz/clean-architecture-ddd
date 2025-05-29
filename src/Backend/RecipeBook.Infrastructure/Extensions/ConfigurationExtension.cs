@@ -1,16 +1,27 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RecipeBook.Infrastructure.Extensions
 {
     public static class ConfigurationExtension
     {
+        /// <summary>
+        /// método que vai verificar se o ambiente é de teste unitário.
+        /// (criado em consequencia dos testes de integração)
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        public static bool IsUnitTestEnvironment(this IConfiguration configuration)
+        {
+            return configuration.GetValue<bool>("InMemoryTest");
+           
+        }
+
+        /// <summary>
+        ///  método que vai pegar a string de conexão do banco de dados e o tipo do banco de dados.
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         public static DatabaseType DatabaseType(this IConfiguration configuration)
         {
             var databaseType = configuration.GetConnectionString("DatabaseType");
@@ -19,6 +30,11 @@ namespace RecipeBook.Infrastructure.Extensions
             return (DatabaseType)Enum.Parse(typeof(DatabaseType), databaseType!);
         }
 
+        /// <summary>
+        /// método que vai pegar a string de conexão do banco de dados.
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
         public static string ConnectionString(this IConfiguration configuration)
         {
             var databaseType = configuration.DatabaseType();

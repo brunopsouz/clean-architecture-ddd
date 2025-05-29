@@ -19,7 +19,6 @@ namespace Validators.Test.User.Register
             result.IsValid.ShouldBeTrue();
 
             //result.IsValid.Should().BeTrue();
-            //result.IsValid.Should().BeTrue();
 
         }
 

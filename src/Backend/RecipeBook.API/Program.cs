@@ -43,6 +43,11 @@ app.Run();
 
 void MigrateDatabase()
 {
+    if (builder.Configuration.IsUnitTestEnvironment())
+    {
+        return;
+    }
+
     var databaseType = builder.Configuration.DatabaseType();
     var connectionString = builder.Configuration.ConnectionString();
 
@@ -50,3 +55,14 @@ void MigrateDatabase()
 
     DatabaseMigration.Migrate(databaseType, connectionString, serviceScope.ServiceProvider);
 }
+
+public partial class Program
+{
+    //public static void Main(string[] args)
+    //{
+    //    var builder = WebApplication.CreateBuilder(args);
+    //    var app = builder.Build();
+    //    app.Run();
+    //}
+}
+
