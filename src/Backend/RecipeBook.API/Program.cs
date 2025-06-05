@@ -1,3 +1,4 @@
+using RecipeBook.API.Converters;
 using RecipeBook.API.Filters;
 using RecipeBook.API.Middleware;
 using RecipeBook.Application;
@@ -9,7 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new StringConverter()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -19,6 +21,9 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
+
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
 
 var app = builder.Build();
 
@@ -58,11 +63,6 @@ void MigrateDatabase()
 
 public partial class Program
 {
-    //public static void Main(string[] args)
-    //{
-    //    var builder = WebApplication.CreateBuilder(args);
-    //    var app = builder.Build();
-    //    app.Run();
-    //}
+    protected Program() { } // For testing purposes, allows mocking of Program class in tests.
 }
 
