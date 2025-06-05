@@ -78,7 +78,7 @@ namespace UseCases.Test.User.Register
 
         }
 
-        private RegisterUserUseCase CreateUseCase(string? email = null)
+        private static RegisterUserUseCase CreateUseCase(string? email = null)
         {
             //1.Mapeia; 2.encripta senha; 3.escreve e-mail no banco; 4. Commit; 5. Verifica se existe e-mail.
             var mapper = MapperBuilder.Build();

@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Domain.Enums;
+using RecipeBook.Domain.Extensions;
 
 namespace RecipeBook.Infrastructure.Migrations
 {
@@ -33,7 +34,7 @@ namespace RecipeBook.Infrastructure.Migrations
 
             var records = dbConnection.Query("SELECT * FROM sys.databases WHERE name=@name", parameters);
 
-            if (records.Any() == false)
+            if (records.Any().IsFalse())
                 dbConnection.Execute($"CREATE DATABASE {dataBaseName}");
 
         }

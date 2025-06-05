@@ -1,0 +1,26 @@
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+
+namespace RecipeBook.API.Converters
+{
+    public partial class StringConverter : JsonConverter<string>
+    {
+        public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            // remove os espaços iniciais e finais.
+            var value = reader.GetString()?.Trim();
+
+            if(string.IsNullOrEmpty(value))
+                return null;
+         
+            return RemoveExtraWhiteSpaces().Replace(value, " ");
+        }
+
+        public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) => 
+            writer.WriteStringValue(value);
+
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex RemoveExtraWhiteSpaces();
+    }
+}

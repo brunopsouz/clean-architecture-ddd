@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using RecipeBook.Domain.Extensions;
+using System.Globalization;
 
 namespace RecipeBook.API.Middleware
 {
@@ -17,7 +18,7 @@ namespace RecipeBook.API.Middleware
         public async Task Invoke(HttpContext context)
         {
             //Obtenho em uma variavel as linguagens suportadas. 
-            var supportedLanguages = CultureInfo.GetCultures(CultureTypes.AllCultures);
+            var supportedLanguages = CultureInfo.GetCultures(CultureTypes.AllCultures).ToList();
 
             //Recupero a linguagem na chamada.
             var requestedCulture = context.Request.Headers.AcceptLanguage.FirstOrDefault();
@@ -25,9 +26,14 @@ namespace RecipeBook.API.Middleware
             //Cria um default em English
             var cultureInfo = new CultureInfo("en");
 
-            //Verifica se é nulo ou tem espaço em branco & compara se a cultura existe na lista de culturas suportadas que obtive em supportedLanguages.
-            if (string.IsNullOrWhiteSpace(requestedCulture) == false 
-                && supportedLanguages.Any(c => c.Name.Equals(requestedCulture)))
+            ////Verifica se não é nulo ou tem espaço em branco & compara se a cultura existe na lista de culturas suportadas que obtive em supportedLanguages.
+            //if (string.IsNullOrWhiteSpace(requestedCulture).IsFalse()
+            //    && supportedLanguages.Exists(c => c.Name.Equals(requestedCulture)))
+            //{
+            //    cultureInfo = new CultureInfo(requestedCulture!);
+            //}
+            if (requestedCulture.NotEmpty()
+                && supportedLanguages.Exists(c => c.Name.Equals(requestedCulture)))
             {
                 cultureInfo = new CultureInfo(requestedCulture);
             }
