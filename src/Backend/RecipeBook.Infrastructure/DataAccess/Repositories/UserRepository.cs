@@ -21,6 +21,14 @@ namespace RecipeBook.Infrastructure.DataAccess.Repositories
 
         public async Task<bool> ExistActiveUserWithEmail(string email) => await _dbContext.Users.AnyAsync(user => user.Email.Equals(email) && user.Active);
 
+        public async Task<bool> ExistActiveUserWithIdentifier(Guid identifier)
+        {
+            return await _dbContext
+                .Users
+                .AsNoTracking()
+                .AnyAsync(user => user.UserIdentifier.Equals(identifier) && user.Active);
+        }
+
         public async Task<User?> GetByEmailAndPassword(string email, string password)
         {
             return await _dbContext

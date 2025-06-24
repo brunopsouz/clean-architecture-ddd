@@ -2,6 +2,7 @@
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
+using CommonTestUtilities.Tokens;
 using RecipeBook.Application.UseCases.User.Register;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
@@ -21,7 +22,9 @@ namespace UseCases.Test.User.Register
             var result = await useCase.Execute(request);
 
             result.ShouldNotBeNull();
+            result.Tokens.ShouldNotBeNull();
             result.Name.ShouldBe(request.Name);
+            result.Tokens.AccessToken.ShouldNotBeNullOrWhiteSpace();
 
         }
 
@@ -29,11 +32,13 @@ namespace UseCases.Test.User.Register
         public async Task Error_Email_Alreary_Registered()
         {
             var request = RequestRegisterUserJsonBuilder.Build();
-            
-            //Função para criar um e-mail válido.
+
+            // Como é teste de UseCase, não devo executar a API diretamente, devo apenas testar a lógica do UseCase, crio uma condição dentro 
+            // de CreateUseCase() que verifica se o e-mail já existe, para entrar no método "ExistActiveUserWithEmail()" e forçar o retorno de um email (true)
+            // ou seja, o mesmo email passado na request, por isso aqui eu passo o e-mail da request como parametro de CreateUseCase(). 
             var useCase = CreateUseCase(request.Email);
 
-            //Para "Execute" esperar true de uma Exception, devo armazenar ele em uma variável de função, se não o Debugtest falha. 
+            //Para "Execute" esperar true de uma Exception, devo armazenar ele em uma variável de função, se não o Debugtest falha.
             Func<Task> act = async () => await useCase.Execute(request);
 
             //Espera-se entrar na função "Execute()" e esperar um erro de e-mail já cadastrado. 
@@ -50,6 +55,7 @@ namespace UseCases.Test.User.Register
 
             //(await act.ShouldThrowAsync<ErrorOnValidationException>())
             
+
         }
 
         [Fact]
@@ -80,21 +86,25 @@ namespace UseCases.Test.User.Register
 
         private static RegisterUserUseCase CreateUseCase(string? email = null)
         {
+            // Parametros = null quer dizer que é opcional, ou seja, se não for passado nada, o teste não vai simular um e-mail já cadastrado.
+
             //1.Mapeia; 2.encripta senha; 3.escreve e-mail no banco; 4. Commit; 5. Verifica se existe e-mail.
             var mapper = MapperBuilder.Build();
             var passwordEncripter = PasswordEncripterBuilder.Build();
             var userWriteOnlyRepository = UserWriteOnlyRepositoryBuilder.Build();
             var unitOfWork = UnitOfWorkBuilder.Build();
             var readRepositoryBuilder = new UserReadOnlyRepositoryBuilder();
+            var accessTokenGenerator = JwtTokenGeneratorBuilder.Build();
 
-            //Se o e-mail não for nulo ou vazio vai entrar na condição
+            //Se o e-mail não for nulo ou vazio vai entrar na condição, para simular um retorno de e-mail já cadastrado. 
+            //uma vez que o teste de UseCase não deve chamar a API diretamente, mas sim testar a lógica do UseCase.
             if (string.IsNullOrEmpty(email) == false)
             {   
                 //verifica se o e-mail existe
                 readRepositoryBuilder.ExistActiveUserWithEmail(email);
             }
 
-            return new RegisterUserUseCase(readRepositoryBuilder.Build(), userWriteOnlyRepository, unitOfWork, passwordEncripter, mapper);
+            return new RegisterUserUseCase(readRepositoryBuilder.Build(), userWriteOnlyRepository, unitOfWork, passwordEncripter, accessTokenGenerator, mapper);
         }
 
     }
