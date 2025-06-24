@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RecipeBook.API.Attributes;
+using RecipeBook.Application.UseCases.User.Profile;
 using RecipeBook.Application.UseCases.User.Register;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
 
 namespace RecipeBook.API.Controllers
 {
-    [Route("[controller]")]
-    [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : RecipeBookBaseController
     {
         /// <summary>
         /// Metodo POST. 
@@ -36,6 +36,17 @@ namespace RecipeBook.API.Controllers
             var result = await useCase.Execute(request); 
 
             return Created(string.Empty, result);
+        }
+
+
+        [HttpGet]
+        [ProducesResponseType(typeof(ResponseUserProfileJson), StatusCodes.Status200OK)]
+        [AuthenticatedUser]
+        public async Task<IActionResult> GetUserProfile(IGetUserProfileUseCase useCase)
+        {
+            var result = await useCase.Execute();
+
+            return Ok(result);
         }
     }
 }

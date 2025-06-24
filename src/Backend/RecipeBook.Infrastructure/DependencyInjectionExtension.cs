@@ -5,9 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Domain.Enums;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.User;
+using RecipeBook.Domain.Security.Tokens;
+using RecipeBook.Domain.Services.LoggedUser;
 using RecipeBook.Infrastructure.DataAccess;
 using RecipeBook.Infrastructure.DataAccess.Repositories;
 using RecipeBook.Infrastructure.Extensions;
+using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
+using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
+using RecipeBook.Infrastructure.Services.LoggedUser;
 using System.Reflection;
 
 namespace RecipeBook.Infrastructure
@@ -25,12 +30,13 @@ namespace RecipeBook.Infrastructure
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             AddRepositories(services);
+            AddLoggerUser(services);
+            AddTokens(services, configuration);
+            
 
-            // método que vai verificar se o ambiente é de teste integração.
+            // método que vai verificar se o ambiente é de teste integração (banco de dados inMemory).
             if (configuration.IsUnitTestEnvironment())
-            {
                 return;
-            }
 
             // método que vai pegar a string de conexão do banco de dados e o tipo do banco de dados.
             var databaseType = configuration.DatabaseType();
@@ -84,5 +90,20 @@ namespace RecipeBook.Infrastructure
                 .ScanIn(Assembly.Load("RecipeBook.Infrastructure")).For.All();
             });
         }
+
+        private static void AddTokens(IServiceCollection services, IConfiguration configuration)
+        {
+            var expirationTimeMinutes = configuration.GetValue<uint>("Settings:Jwt:ExpirationTimeMinutes");
+            var signingKey = configuration.GetValue<string>("Settings:Jwt:SigningKey");
+
+            services.AddScoped<IAccessTokenGenerator>(option => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
+            services.AddScoped<IAccessTokenValidator>(option => new JwtTokenValidator(signingKey!));
+        }
+
+        private static void AddLoggerUser(IServiceCollection services)
+        {
+            services.AddScoped<ILoggedUser, LoggedUser>();
+        }
+
     }
 }

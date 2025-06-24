@@ -1,10 +1,6 @@
 ﻿using Moq;
+using RecipeBook.Domain.Entities;
 using RecipeBook.Domain.Repositories.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CommonTestUtilities.Repositories
 {
@@ -19,7 +15,13 @@ namespace CommonTestUtilities.Repositories
 
         public void ExistActiveUserWithEmail(string email)
         {
+            // criada condição para teste de UseCase para simular um retorno true de um email já cadastrado no banco de dados
             _repository.Setup(repository => repository.ExistActiveUserWithEmail(email)).ReturnsAsync(true);
+        }
+
+        public void GetByEmailAndPassword(User user)
+        {
+            _repository.Setup(repository => repository.GetByEmailAndPassword(user.Email, user.Password)).ReturnsAsync(user);
         }
 
         public IUserReadOnlyRepository Build()

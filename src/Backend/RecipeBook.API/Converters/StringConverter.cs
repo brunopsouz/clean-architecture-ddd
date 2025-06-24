@@ -11,7 +11,7 @@ namespace RecipeBook.API.Converters
             // remove os espaços iniciais e finais.
             var value = reader.GetString()?.Trim();
 
-            if(string.IsNullOrEmpty(value))
+            if(value is null)
                 return null;
          
             return RemoveExtraWhiteSpaces().Replace(value, " ");

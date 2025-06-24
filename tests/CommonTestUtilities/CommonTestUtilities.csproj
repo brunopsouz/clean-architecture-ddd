@@ -14,7 +14,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Backend\RecipeBook.Application\RecipeBook.Application.csproj" />
+    <ProjectReference Include="..\..\src\Backend\RecipeBook.Infrastructure\RecipeBook.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Shared\RecipeBook.Communication\RecipeBook.Communication.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LoggedUser\" />
   </ItemGroup>
 
 </Project>

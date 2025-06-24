@@ -2,8 +2,10 @@
 using RecipeBook.Application.Services.Criptography;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
+using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.User;
+using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 
@@ -18,6 +20,7 @@ namespace RecipeBook.Application.UseCases.User.Register
         private readonly IUserWriteOnlyRepository _iuserWriteOnlyRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IAccessTokenGenerator _accessTokenGenerator;
         private readonly PasswordEncripter _passwordEncripter;
 
         /// <summary>
@@ -32,6 +35,7 @@ namespace RecipeBook.Application.UseCases.User.Register
             IUserWriteOnlyRepository iuserWriteOnlyRepository,
             IUnitOfWork unitOfWork,
             PasswordEncripter passwordEncripter,
+            IAccessTokenGenerator accessTokenGenerator,
             IMapper mapper)
         {
             _iuserReadOnlyRepository = iuserReadOnlyRepository;
@@ -39,14 +43,13 @@ namespace RecipeBook.Application.UseCases.User.Register
             _passwordEncripter = passwordEncripter;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _accessTokenGenerator = accessTokenGenerator;
         }
 
         /// <summary>
         /// Metodo POST
         /// Aqui ficam todas as validações do metodo da chamada que vem da Controller.
-        /// 
         /// Dentro do método estou documentando uma ordem de passos/tarefas a serem feitas.
-        /// 
         /// </summary>
         /// <param name="request"></param>
         /// <returns> ResponseRegisteredUserJson retornando NAME </returns>
@@ -61,6 +64,8 @@ namespace RecipeBook.Application.UseCases.User.Register
             // 3. Criptografar a senha
             user.Password = _passwordEncripter.Encrypt(request.Password);
 
+            user.UserIdentifier = Guid.NewGuid();
+
             // 4. Salvar no banco de dados
             await _iuserWriteOnlyRepository.Add(user);
 
@@ -69,6 +74,10 @@ namespace RecipeBook.Application.UseCases.User.Register
             return new ResponseRegisteredUserJson
             {
                 Name = user.Name,
+                Tokens = new ResponseTokensJson
+                {
+                    AccessToken = _accessTokenGenerator.Generate(user.UserIdentifier)
+                }
             };
         }
 
@@ -91,7 +100,7 @@ namespace RecipeBook.Application.UseCases.User.Register
             if (emailExist)
                 result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, ResourceMessagesException.EMAIL_ALREADY_REGISTERED));
 
-            if (result.IsValid == false) 
+            if (result.IsValid.IsFalse()) 
             {
                 var errorMessages = result.Errors.Select(e => e.ErrorMessage).ToList();
 

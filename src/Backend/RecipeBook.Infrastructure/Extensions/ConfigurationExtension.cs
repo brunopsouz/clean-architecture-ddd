@@ -5,12 +5,8 @@ namespace RecipeBook.Infrastructure.Extensions
 {
     public static class ConfigurationExtension
     {
-        /// <summary>
-        /// método que vai verificar se o ambiente é de teste unitário.
-        /// (criado em consequencia dos testes de integração)
-        /// </summary>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
+
+        //Método que vou recuperar o banco de dados InMemoryTest.
         public static bool IsUnitTestEnvironment(this IConfiguration configuration)
         {
             return configuration.GetValue<bool>("InMemoryTest");
