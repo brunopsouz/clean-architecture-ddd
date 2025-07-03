@@ -11,7 +11,7 @@ namespace RecipeBook.Infrastructure.DataAccess.Repositories
     /// GET     POST    PUT     DEL
     /// Etc...
     /// </summary>
-    public class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepository
+    public class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepository, IUserUpdateOnlyRepository
     {
         private readonly RecipeBookDbContext _dbContext;
 
@@ -36,5 +36,15 @@ namespace RecipeBook.Infrastructure.DataAccess.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(user => user.Active && user.Email.Equals(email) && user.Password.Equals(password));
         }
+
+        public async Task<User> GetById(long id)
+        {
+            return await _dbContext
+                .Users
+                .FirstAsync(user => user.Id == id);
+        }
+
+        public void Update(User user) => _dbContext.Users.Update(user);
+       
     }
 }

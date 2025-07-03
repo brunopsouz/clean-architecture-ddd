@@ -5,11 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using RecipeBook.Domain.Enums;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.User;
+using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Domain.Services.LoggedUser;
 using RecipeBook.Infrastructure.DataAccess;
 using RecipeBook.Infrastructure.DataAccess.Repositories;
 using RecipeBook.Infrastructure.Extensions;
+using RecipeBook.Infrastructure.Security.Criptography;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
 using RecipeBook.Infrastructure.Services.LoggedUser;
@@ -29,6 +31,7 @@ namespace RecipeBook.Infrastructure
         /// <param name="services"></param>
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            AddPasswordEncrypter(services, configuration);
             AddRepositories(services);
             AddLoggerUser(services);
             AddTokens(services, configuration);
@@ -76,6 +79,7 @@ namespace RecipeBook.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
             services.AddScoped<IUserReadOnlyRepository, UserRepository>();
+            services.AddScoped<IUserUpdateOnlyRepository, UserRepository>();
         }
 
         private static void AddFluentMigrator_SqlServer(IServiceCollection services, IConfiguration configuration)
@@ -103,6 +107,14 @@ namespace RecipeBook.Infrastructure
         private static void AddLoggerUser(IServiceCollection services)
         {
             services.AddScoped<ILoggedUser, LoggedUser>();
+        }
+
+        private static void AddPasswordEncrypter(IServiceCollection services, IConfiguration configuration)
+        {
+            ///Microsoft.Extensions.Configuration.Binder
+            var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
+
+            services.AddScoped<IPasswordEncripter>(options => new Sha512Encripter(additionalKey!));
         }
 
     }

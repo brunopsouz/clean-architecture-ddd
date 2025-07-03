@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using RecipeBook.Application.Services.Criptography;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.User;
+using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
@@ -21,7 +21,7 @@ namespace RecipeBook.Application.UseCases.User.Register
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IAccessTokenGenerator _accessTokenGenerator;
-        private readonly PasswordEncripter _passwordEncripter;
+        private readonly IPasswordEncripter _passwordEncripter;
 
         /// <summary>
         ///     Construtor da Classe, onde serão instanciados todas as classes que ajudam no código.
@@ -34,7 +34,7 @@ namespace RecipeBook.Application.UseCases.User.Register
             IUserReadOnlyRepository iuserReadOnlyRepository, 
             IUserWriteOnlyRepository iuserWriteOnlyRepository,
             IUnitOfWork unitOfWork,
-            PasswordEncripter passwordEncripter,
+            IPasswordEncripter passwordEncripter,
             IAccessTokenGenerator accessTokenGenerator,
             IMapper mapper)
         {

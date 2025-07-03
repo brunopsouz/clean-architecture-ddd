@@ -18,8 +18,4 @@
     <ProjectReference Include="..\..\src\Shared\RecipeBook.Communication\RecipeBook.Communication.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="LoggedUser\" />
-  </ItemGroup>
-
 </Project>
