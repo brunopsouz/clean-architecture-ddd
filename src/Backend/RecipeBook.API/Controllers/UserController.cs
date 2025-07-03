@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RecipeBook.API.Attributes;
 using RecipeBook.Application.UseCases.User.Profile;
 using RecipeBook.Application.UseCases.User.Register;
+using RecipeBook.Application.UseCases.User.Update;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
 
@@ -48,5 +49,20 @@ namespace RecipeBook.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+        [AuthenticatedUser]
+        public async Task<IActionResult> UpdateUserProfile(
+            [FromServices]IUpdateUserUseCase updateUserUseCase,
+            [FromBody] RequestUpdateUserJson requestUpdateUserJson)
+        {
+            await updateUserUseCase.Execute(requestUpdateUserJson);
+
+            return NoContent();
+        }
+
+
     }
 }
