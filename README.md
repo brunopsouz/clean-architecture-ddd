@@ -56,7 +56,7 @@ O sistema consiste em uma API para gerenciamento de receitas culinárias com aut
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/seu-usuario/livro-de-receitas.git
+git clone https://github.com/brunopsouz/clean-architecture-ddd.git
 
 # Subir os containers com Docker
 docker-compose up --build
