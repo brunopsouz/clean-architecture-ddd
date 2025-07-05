@@ -26,7 +26,7 @@ namespace WebApi.Test.User.Update
             // Criei dados de um usuário somente para teste.
             var request = RequestUpdateUserJsonBuilder.Build();
 
-            // cria o token JWT para autenticação do usuárioTeste.
+            // cria o token JWT para autenticação do usuárioTeste
             var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
 
             // Faço a chamada com o método PUT, a request e o token JWT.
