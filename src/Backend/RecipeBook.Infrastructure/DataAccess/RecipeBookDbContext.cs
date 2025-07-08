@@ -15,6 +15,7 @@ namespace RecipeBook.Infrastructure.DataAccess
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

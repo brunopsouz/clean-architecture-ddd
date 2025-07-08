@@ -10,7 +10,7 @@ namespace RecipeBook.Domain.Entities
         public IList<Ingredient> Ingredients { get; set; } = [];
         public IList<Instruction> Instructions { get; set; } = [];
         public IList<DishType> DishTypes { get; set; } = [];
-        public long UserId { get; set; } // Foreign key to the User entity
+        public long UserId { get; set; }
 
     }
 }

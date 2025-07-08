@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RecipeBook.Infrastructure.Migrations;
+﻿namespace RecipeBook.Infrastructure.Migrations;
 
 public abstract class DatabaseVersions
 {
