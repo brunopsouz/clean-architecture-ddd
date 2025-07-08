@@ -141,13 +141,46 @@
   <data name="USER_WITHOUT_PERMISSION_ACCESS_RESOURCE" xml:space="preserve">
     <value>You do not have permission to access this resource</value>
   </data>
-  <data name="EMAIL_ALREADY_REGISTERED" xml:space="preserve">
-    <value>Email already registered.</value>
-  </data>
   <data name="INVALID_PASSWORD" xml:space="preserve">
     <value>Password needs to be than 6 characteres.</value>
   </data>
   <data name="PASSWORD_DIFFERENT_CURRENT_PASSWORD" xml:space="preserve">
     <value>The current password is different. </value>
+  </data>
+  <data name="RECIPE_TITLE_EMPTY" xml:space="preserve">
+    <value>Recipe title cannot be empty.</value>
+  </data>
+  <data name="EMAIL_ALREADY_REGISTERED" xml:space="preserve">
+    <value>Email already registered.</value>
+  </data>
+  <data name="COOKING_TIME_NOT_SUPPORTED" xml:space="preserve">
+    <value>Number of cooking time not supported in Enum.</value>
+  </data>
+  <data name="DIFFICULTY_LEVEL_NOT_SUPPORTED" xml:space="preserve">
+    <value>Number of difficulty level not supported in Enum</value>
+  </data>
+  <data name="AT_LEAST_ONE_INGREDIENT" xml:space="preserve">
+    <value>The ingredient list must have at least one ingredient. </value>
+  </data>
+  <data name="AT_LIST_ONE_INSTRUCTION" xml:space="preserve">
+    <value>The list must have at least one instruction</value>
+  </data>
+  <data name="DISH_TYPE_NOT_SUPPORTED" xml:space="preserve">
+    <value>Number of Dish Type not supported.</value>
+  </data>
+  <data name="INGREDIENT_EMPTY" xml:space="preserve">
+    <value>There should not be any empty ingredients.</value>
+  </data>
+  <data name="NON_NEGATIVE_OR_ZERO_INSTRUCTION_STEP" xml:space="preserve">
+    <value>Instruction must have greater than 0.</value>
+  </data>
+  <data name="INSTRUCTION_EMPTY" xml:space="preserve">
+    <value>Instruction cannot be empty</value>
+  </data>
+  <data name="INSTRUCTION_EXCEEDS_LIMIT_CHARACTERS" xml:space="preserve">
+    <value>Instruction exceeds the limit of characters.</value>
+  </data>
+  <data name="TWO_OR_MORE_INSTRUCTIONS_SAME_ORDER" xml:space="preserve">
+    <value>Cannot be two or more instructions in the same order.</value>
   </data>
 </root>

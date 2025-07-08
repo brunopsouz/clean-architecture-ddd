@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="EMAIL_EMPTY" xml:space="preserve">
-    <value>Email nao pode ser vazio.</value>
+    <value>E-mail nao pode ser vazio.</value>
   </data>
   <data name="EMAIL_INVALID" xml:space="preserve">
-    <value>Email invalido.</value>
+    <value>E-mail invalido.</value>
   </data>
   <data name="EMAIL_OR_PASSWORD_INVALID" xml:space="preserve">
     <value>E-mail e/ou senha inválidos.</value>
@@ -141,13 +141,46 @@
   <data name="USER_WITHOUT_PERMISSION_ACCESS_RESOURCE" xml:space="preserve">
     <value>Você não tem permissão para acessar esse recurso.</value>
   </data>
-  <data name="EMAIL_ALREADY_REGISTERED" xml:space="preserve">
-    <value>Email ja registrado.</value>
-  </data>
   <data name="INVALID_PASSWORD" xml:space="preserve">
     <value>Password precisa ter mais que 6 caracteres</value>
   </data>
   <data name="PASSWORD_DIFFERENT_CURRENT_PASSWORD" xml:space="preserve">
     <value>O password atual está diferente.</value>
+  </data>
+  <data name="RECIPE_TITLE_EMPTY" xml:space="preserve">
+    <value>Titulo da receita não pode ser vazio.</value>
+  </data>
+  <data name="EMAIL_ALREADY_REGISTERED" xml:space="preserve">
+    <value>E-mail ja registrado.</value>
+  </data>
+  <data name="COOKING_TIME_NOT_SUPPORTED" xml:space="preserve">
+    <value>Cooking time não suportado no Enum.</value>
+  </data>
+  <data name="DIFFICULTY_LEVEL_NOT_SUPPORTED" xml:space="preserve">
+    <value>Dificuldade não suportada no Enum.</value>
+  </data>
+  <data name="AT_LEAST_ONE_INGREDIENT" xml:space="preserve">
+    <value>A lista de ingredientes deve ter pelo menos um ingrediente.</value>
+  </data>
+  <data name="AT_LIST_ONE_INSTRUCTION" xml:space="preserve">
+    <value>A lista deve ter pelo menos uma instrução.</value>
+  </data>
+  <data name="DISH_TYPE_NOT_SUPPORTED" xml:space="preserve">
+    <value>Opção do dish type não suportado.</value>
+  </data>
+  <data name="INGREDIENT_EMPTY" xml:space="preserve">
+    <value>Não deve ter nenhum ingrediente vazio.</value>
+  </data>
+  <data name="NON_NEGATIVE_OR_ZERO_INSTRUCTION_STEP" xml:space="preserve">
+    <value>Instrução deve ser maior que zero.</value>
+  </data>
+  <data name="INSTRUCTION_EMPTY" xml:space="preserve">
+    <value>Instrução não pode ser vazia.</value>
+  </data>
+  <data name="INSTRUCTION_EXCEEDS_LIMIT_CHARACTERS" xml:space="preserve">
+    <value>Instrução excedeu o limite de characteres.</value>
+  </data>
+  <data name="TWO_OR_MORE_INSTRUCTIONS_SAME_ORDER" xml:space="preserve">
+    <value>Não pode ter duas ou mais instruções na mesma ordem.</value>
   </data>
 </root>
