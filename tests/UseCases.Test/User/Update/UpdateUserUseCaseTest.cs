@@ -2,14 +2,11 @@
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using RecipeBook.Application.UseCases.User.Update;
-using RecipeBook.Domain.Entities;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 using Shouldly;
-using System.Threading.Tasks;
 using UseCases.Test.User.Profile;
-using Xunit.Sdk;
 
 namespace UseCases.Test.User.Update
 {
