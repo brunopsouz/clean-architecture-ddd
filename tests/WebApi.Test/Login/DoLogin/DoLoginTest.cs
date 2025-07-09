@@ -12,7 +12,7 @@ namespace WebApi.Test.Login.DoLogin
 {
     public class DoLoginTest : RecipeBookClassFixture
     {
-        private readonly string method = "login";
+        private readonly string METHOD = "login";
 
         private readonly string _email;
         private readonly string _password;
@@ -35,7 +35,7 @@ namespace WebApi.Test.Login.DoLogin
             };
 
             //  Envia a requisição POST para o endpoint "User" com o corpo da requisição como JSON
-            var response = await DoPost(method, request);
+            var response = await DoPost(method: METHOD, request: request);
 
             // Verifica se o status da resposta é 201 Ok
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -72,7 +72,7 @@ namespace WebApi.Test.Login.DoLogin
             var request = RequestLoginJsonBuilder.Build();
 
             //  Envia a requisição POST para o endpoint "User" com o corpo da requisição como JSON
-            var response = await DoPost(method, request, culture);
+            var response = await DoPost(method: METHOD, request: request, culture: culture);
 
             // Verifica se o status da resposta é 400 Bad Request
             response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);

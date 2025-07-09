@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
+using CommonTestUtilities.idEncryption;
 using RecipeBook.Application.Services.AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CommonTestUtilities.Mapper
 {
@@ -16,12 +12,16 @@ namespace CommonTestUtilities.Mapper
     {
         public static IMapper Build()
         {
+            var idEncripter = IdEncripterBuilder.Build();
+
             //Retorna um novo mapeamento criado.
-            return new MapperConfiguration(options =>
+            var mapper = new MapperConfiguration(options =>
             {
                 //função que chama a minha classe de AutoMapper em Application.
-                options.AddProfile(new AutoMapping());
+                options.AddProfile(new AutoMapping(idEncripter));
             }).CreateMapper();
+
+            return mapper;
         }
     }
 }

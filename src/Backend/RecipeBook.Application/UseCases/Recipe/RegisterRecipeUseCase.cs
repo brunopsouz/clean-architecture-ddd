@@ -53,7 +53,7 @@ namespace RecipeBook.Application.UseCases.Recipe
 
         }
 
-        private async Task Validate(RequestRecipeJson request)
+        private static void Validate(RequestRecipeJson request)
         {
             var result = new RecipeValidator().Validate(request);
 

@@ -1,7 +1,9 @@
 ﻿using RecipeBook.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RecipeBook.Domain
 {
+    [Table("Instructions")]
     public class Instruction : EntityBase
     {
         public int Step { get; set; }

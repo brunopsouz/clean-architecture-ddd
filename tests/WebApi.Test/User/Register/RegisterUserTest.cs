@@ -18,7 +18,7 @@ namespace WebApi.Test.User.Register
     /// </summary>
     public class RegisterUserTest : RecipeBookClassFixture
     {
-        private readonly string method = "user";
+        private readonly string METHOD = "user";
 
         public RegisterUserTest(CustomWebApplicationFactory factory) : base(factory) { }
 
@@ -29,7 +29,7 @@ namespace WebApi.Test.User.Register
             var request = RequestRegisterUserJsonBuilder.Build();
 
             //  Envia a requisição POST para o endpoint "User" com o corpo da requisição como JSON
-            var response = await DoPost(method, request);
+            var response = await DoPost(method: METHOD, request: request);
 
             // Verifica se o status da resposta é 201 Created
             response.StatusCode.ShouldBe(HttpStatusCode.Created);
@@ -66,7 +66,7 @@ namespace WebApi.Test.User.Register
             var request = RequestRegisterUserJsonBuilder.Build();
             request.Name = string.Empty;
 
-            var response = await DoPost(method, request, culture);
+            var response = await DoPost(method: METHOD, request: request, culture: culture);
 
             response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 

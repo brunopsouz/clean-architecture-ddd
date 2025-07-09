@@ -1,7 +1,6 @@
 ﻿using CommonTestUtilities.Requests;
 using CommonTestUtilities.Tokens;
 using Shouldly;
-using System.Text.Json;
 using Xunit;
 
 namespace WebApi.Test.User.Update
