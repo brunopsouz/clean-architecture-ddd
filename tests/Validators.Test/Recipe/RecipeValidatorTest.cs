@@ -1,5 +1,6 @@
 ﻿using CommonTestUtilities.Requests;
 using RecipeBook.Application.UseCases.Recipe;
+using RecipeBook.Application.UseCases.Recipe.Register;
 using RecipeBook.Communication.Enums;
 using RecipeBook.Exceptions;
 using Shouldly;

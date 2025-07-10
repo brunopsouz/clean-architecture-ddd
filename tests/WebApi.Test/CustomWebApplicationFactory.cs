@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RecipeBook.Domain.Enums;
 using RecipeBook.Infrastructure.DataAccess;
 
 namespace WebApi.Test
@@ -14,6 +15,7 @@ namespace WebApi.Test
         // Teste de integração executa a API e faz de fato requisições na API testando a resposta da API.
         // Obs: Criar um construtor para Program.cs, pois o WebApplicationFactory não consegue instanciar a classe Program.cs.
 
+        private RecipeBook.Domain.Entities.Recipe _recipe = default!;
         private RecipeBook.Domain.Entities.User _user = default!;
         private string _password = string.Empty;
 
@@ -67,11 +69,20 @@ namespace WebApi.Test
 
         public Guid GetUserIdentifier() => _user.UserIdentifier;
 
+        public string GetRecipeTitle() => _recipe.Title;
+        public Difficulty GetRecipeDifficulty() => _recipe.Difficulty!.Value;
+        public CookingTime GetRecipeCookingTime() => _recipe.CookingTime!.Value;
+        public IList<DishType> GetDishTypes() => _recipe.DishTypes.Select(c => c.Type).ToList();
+
         private void StartDatabase(RecipeBookDbContext dbContext)
         {
             (_user, _password) = UserBuilder.Build();
 
+            _recipe = RecipeBuilder.Build(_user);
+
             dbContext.Users.Add(_user);
+
+            dbContext.Recipes.Add(_recipe);
 
             dbContext.SaveChanges();
 
