@@ -2,7 +2,7 @@
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
-using RecipeBook.Application.UseCases.Recipe;
+using RecipeBook.Application.UseCases.Recipe.Register;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 using Shouldly;
