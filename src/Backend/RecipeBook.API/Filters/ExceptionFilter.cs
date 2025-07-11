@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using RecipeBook.Exceptions.ExceptionsBase;
 using RecipeBook.Communication.Responses;
 using RecipeBook.Exceptions;
-using RecipeBook.Exceptions.ExceptionsBase;
 using System;
 using System.Net;
 
@@ -35,6 +35,11 @@ namespace RecipeBook.API.Filters
 
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 context.Result = new BadRequestObjectResult(new ResponseErrorJson(exception!.ErrorMessages));
+            }
+            else if (context.Exception is NotFoundException)
+            {
+                context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                context.Result = new NotFoundObjectResult(new ResponseErrorJson(context.Exception.Message));
             }
         }
 
