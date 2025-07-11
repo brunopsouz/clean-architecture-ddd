@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MyRecipeBook.Application.UseCases.Recipe.Filter;
 using RecipeBook.Application.Services.AutoMapper;
 using RecipeBook.Application.UseCases.Login.DoLogin;
+using RecipeBook.Application.UseCases.Recipe.Delete;
 using RecipeBook.Application.UseCases.Recipe.Filter;
 using RecipeBook.Application.UseCases.Recipe.GetById;
 using RecipeBook.Application.UseCases.Recipe.Register;
@@ -55,6 +56,7 @@ namespace RecipeBook.Application
             services.AddScoped<IRegisterRecipeUseCase, RegisterRecipeUseCase>();
             services.AddScoped<IFilterRecipeUseCase, FilterRecipeUseCase>();
             services.AddScoped<IGetRecipeByIdUseCase, GetRecipeByIdUseCase>();
+            services.AddScoped<IDeleteRecipeUseCase, DeleteRecipeUseCase>();
         }
 
     }
