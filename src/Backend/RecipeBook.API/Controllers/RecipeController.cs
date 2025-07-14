@@ -5,6 +5,7 @@ using RecipeBook.API.Binders;
 using RecipeBook.Application.UseCases.Recipe.Delete;
 using RecipeBook.Application.UseCases.Recipe.GetById;
 using RecipeBook.Application.UseCases.Recipe.Register;
+using RecipeBook.Application.UseCases.Recipe.Update;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
 
@@ -18,7 +19,7 @@ public class RecipeController : RecipeBookBaseController
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register(
         [FromServices] IRegisterRecipeUseCase useCase,
-        [FromBody] RequestRecipeJson request )
+        [FromBody] RequestRecipeJson request)
     {
         var response = await useCase.Execute(request);
 
@@ -34,7 +35,7 @@ public class RecipeController : RecipeBookBaseController
     {
         var response = await useCase.Execute(request);
 
-        if(response.Recipes.Any())
+        if (response.Recipes.Any())
             return Ok(response);
 
         return NoContent();
@@ -66,5 +67,18 @@ public class RecipeController : RecipeBookBaseController
 
     }
 
-}
+    [HttpPut]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
+        [FromServices] IUpdateRecipeUseCase useCase,
+        [FromRoute][ModelBinder(typeof(RecipeBookIdBinder))] long id,
+        [FromBody] RequestRecipeJson request)
+    {
+        await useCase.Execute(id, request);
+        return NoContent();
 
+    }
+
+}
