@@ -7,7 +7,7 @@ namespace WebApi.Test.Recipe.Delete
 {
     public class DeleteRecipeInvalidTokenTest : RecipeBookClassFixture
     {
-        private readonly string METHOD = "recipe";
+        private const string METHOD = "recipe";
 
         public DeleteRecipeInvalidTokenTest(CustomWebApplicationFactory factory) : base(factory)
         {

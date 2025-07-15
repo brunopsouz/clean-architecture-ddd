@@ -7,7 +7,7 @@ namespace WebApi.Test.Recipe.GetById
 {
     public class GetRecipeByIdInvalidTokenTest : RecipeBookClassFixture
     {
-        private readonly string METHOD = "recipe";
+        private const string METHOD = "recipe";
 
         public GetRecipeByIdInvalidTokenTest(CustomWebApplicationFactory factory) : base(factory)
         {

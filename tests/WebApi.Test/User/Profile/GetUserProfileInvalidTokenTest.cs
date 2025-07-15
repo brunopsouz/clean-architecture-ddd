@@ -7,7 +7,7 @@ namespace WebApi.Test.User.Profile
 {
     public class GetUserProfileInvalidTokenTest : RecipeBookClassFixture
     {
-        private readonly string METHOD = "user"; 
+        private const string METHOD = "user"; 
 
         public GetUserProfileInvalidTokenTest(CustomWebApplicationFactory factory) : base(factory)
         {

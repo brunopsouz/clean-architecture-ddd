@@ -32,6 +32,7 @@ namespace UseCases.Test.User.ChangePassword
             user.Password.ShouldBe(passwordEncripter.Encrypt(request.NewPassword));
         }
 
+        [Fact]
         public async Task Error_NewPassword_Empty()
         {
             (var user, var password) = UserBuilder.Build();

@@ -7,7 +7,7 @@ namespace WebApi.Test.Dashboard
 {
     public class GetDashboardTest : RecipeBookClassFixture
     {
-        private readonly string METHOD = "dashboard";
+        private const string METHOD = "dashboard";
         private readonly Guid _userIdentifier;
 
         public GetDashboardTest(CustomWebApplicationFactory factory) : base(factory)
