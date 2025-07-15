@@ -12,7 +12,7 @@ namespace WebApi.Test.Recipe.GetById
     public class GetRecipeByIdTest : RecipeBookClassFixture
     {
 
-        private readonly string METHOD = "recipe";
+        private const string METHOD = "recipe";
         private readonly Guid _userIdentifier;
         private readonly string _recipeId;
         private readonly string _recipeTitle;

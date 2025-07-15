@@ -6,7 +6,8 @@ namespace WebApi.Test.Dashboard
 {
     public class GetDashboardInvalidTokenTest : RecipeBookClassFixture
     {
-        private readonly string METHOD = "dashboard";
+        private const string METHOD = "dashboard";
+
         public GetDashboardInvalidTokenTest(CustomWebApplicationFactory factory) : base(factory)
         {
         }

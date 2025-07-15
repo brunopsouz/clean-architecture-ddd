@@ -12,7 +12,7 @@ namespace WebApi.Test.Recipe.Delete
 {
     public class DeleteRecipeTest : RecipeBookClassFixture
     {
-        private readonly string METHOD = "recipe";
+        private const string METHOD = "recipe";
         private readonly Guid _userIdentifier;
         private readonly string _recipeId;
 
@@ -25,6 +25,7 @@ namespace WebApi.Test.Recipe.Delete
         [Fact]
         public async Task Success()
         {
+            // token
             var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
 
             var response = await DoDelete($"{METHOD}/{_recipeId}", token: token);
