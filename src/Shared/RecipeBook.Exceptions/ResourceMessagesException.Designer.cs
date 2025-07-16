@@ -106,6 +106,15 @@ namespace RecipeBook.Exceptions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There&apos;re duplicated ingredients in List..
+        /// </summary>
+        public static string DUPLICATED_INGREDIENTS_IN_LIST {
+            get {
+                return ResourceManager.GetString("DUPLICATED_INGREDIENTS_IN_LIST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email already registered..
         /// </summary>
         public static string EMAIL_ALREADY_REGISTERED {
@@ -151,6 +160,15 @@ namespace RecipeBook.Exceptions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ingredient not following the patterns.
+        /// </summary>
+        public static string INGREDIENT_NOT_FOLLOWING_PATTERN {
+            get {
+                return ResourceManager.GetString("INGREDIENT_NOT_FOLLOWING_PATTERN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Instruction cannot be empty.
         /// </summary>
         public static string INSTRUCTION_EMPTY {
@@ -165,6 +183,15 @@ namespace RecipeBook.Exceptions {
         public static string INSTRUCTION_EXCEEDS_LIMIT_CHARACTERS {
             get {
                 return ResourceManager.GetString("INSTRUCTION_EXCEEDS_LIMIT_CHARACTERS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid number of ingredients. The list must have contain between 1 and 5 ingredients..
+        /// </summary>
+        public static string INVALID_NUMBER_INGREDIENTS {
+            get {
+                return ResourceManager.GetString("INVALID_NUMBER_INGREDIENTS", resourceCulture);
             }
         }
         
