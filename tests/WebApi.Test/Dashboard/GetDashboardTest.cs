@@ -18,6 +18,7 @@ namespace WebApi.Test.Dashboard
         [Fact]
         public async Task Success() 
         {
+            // Arrange: Prepare the token for the user
             var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
 
             var response = await DoGet(METHOD, token: token);
