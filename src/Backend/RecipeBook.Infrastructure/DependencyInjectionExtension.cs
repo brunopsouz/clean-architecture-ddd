@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RecipeBook.Infrastructure.Services.OpenAI;
+using OpenAI.Chat;
 using RecipeBook.Domain.Enums;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.Recipe;
@@ -9,6 +11,8 @@ using RecipeBook.Domain.Repositories.User;
 using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Domain.Services.LoggedUser;
+using RecipeBook.Domain.Services.OpenAI;
+using RecipeBook.Domain.ValueObjects;
 using RecipeBook.Infrastructure.DataAccess;
 using RecipeBook.Infrastructure.DataAccess.Repositories;
 using RecipeBook.Infrastructure.Extensions;
@@ -17,6 +21,8 @@ using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
 using RecipeBook.Infrastructure.Services.LoggedUser;
 using System.Reflection;
+
+
 
 namespace RecipeBook.Infrastructure
 {
@@ -32,6 +38,7 @@ namespace RecipeBook.Infrastructure
         /// <param name="services"></param>
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            AddOpenAI(services, configuration);
             AddPasswordEncrypter(services, configuration);
             AddRepositories(services);
             AddLoggerUser(services);
@@ -119,6 +126,15 @@ namespace RecipeBook.Infrastructure
             var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
 
             services.AddScoped<IPasswordEncripter>(options => new Sha512Encripter(additionalKey!));
+        }
+
+        private static void AddOpenAI(IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<IGenerateRecipeAI, ChatGptService>();
+
+            var apiKey = configuration.GetValue<string>("Settings:OpenAI:ApiKey");
+
+            services.AddScoped(c => new ChatClient(RecipeBookRuleConstants.CHAT_MODEL, apiKey));
         }
 
     }

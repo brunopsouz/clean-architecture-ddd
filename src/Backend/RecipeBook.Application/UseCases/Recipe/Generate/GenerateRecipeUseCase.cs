@@ -1,4 +1,5 @@
-﻿using RecipeBook.Communication.Requests;
+﻿using RecipeBook.Communication.Enums;
+using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Services.OpenAI;
@@ -25,13 +26,13 @@ namespace RecipeBook.Application.UseCases.Recipe.Generate
             {
                 Title = response.Title,
                 Ingredients = response.Ingredients,
-                CookingTime = (Communication.Enums.CookingTime)response.CookingTime,
+                CookingTime = (CookingTime)response.CookingTime,
                 Instructions = response.Instructions.Select(c => new ResponseGeneratedInstructionJson
                 {
                     Step = c.Step,
                     Text = c.Text,
                 }).ToList(),
-                Difficulty = Communication.Enums.Difficulty.Low
+                Difficulty = Difficulty.Low
             };
         }
 
