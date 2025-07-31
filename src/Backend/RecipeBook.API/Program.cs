@@ -1,4 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.OpenApi.Models;
+using RecipeBook.API.BackgroundServices;
 using RecipeBook.API.Converters;
 using RecipeBook.API.Filters;
 using RecipeBook.API.Middleware;
@@ -56,7 +60,6 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
 
-
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>();
@@ -65,6 +68,9 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddHostedService<DeleteUserService>();
+
+AddGoogleAuthentication();
 
 var app = builder.Build();
 
@@ -83,6 +89,19 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+        var exception = exceptionHandlerPathFeature?.Error;
+
+        Console.WriteLine(exception?.ToString()); // ou logue onde quiser
+        context.Response.StatusCode = 500;
+        await context.Response.WriteAsync("Internal Server Error.");
+    });
+});
+
 MigrateDatabase();
 
 await app.RunAsync();
@@ -100,6 +119,22 @@ void MigrateDatabase()
     var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
     DatabaseMigration.Migrate(databaseType, connectionString, serviceScope.ServiceProvider);
+}
+
+void AddGoogleAuthentication()
+{
+    var clientId = builder.Configuration.GetValue<string>("Settings:Google:ClientId")!;
+    var clientSecret = builder.Configuration.GetValue<string>("Settings:Google:ClientSecret")!;
+
+    builder.Services.AddAuthentication(config =>
+    {
+        config.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    }).AddCookie()
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = clientId;
+        googleOptions.ClientSecret = clientSecret;
+    });
 }
 
 public partial class Program

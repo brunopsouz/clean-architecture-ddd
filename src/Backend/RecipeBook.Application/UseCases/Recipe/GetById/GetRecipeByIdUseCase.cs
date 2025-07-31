@@ -5,6 +5,8 @@ using RecipeBook.Domain.Services.LoggedUser;
 using RecipeBook.Exceptions.ExceptionsBase;
 using RecipeBook.Exceptions;
 using RecipeBook.Communication.Responses;
+using RecipeBook.Domain.Services.Storage;
+using RecipeBook.Domain.Extensions;
 
 namespace RecipeBook.Application.UseCases.Recipe.GetById
 {
@@ -14,15 +16,18 @@ namespace RecipeBook.Application.UseCases.Recipe.GetById
         private readonly ILoggedUser _loggedUser;
         private readonly IMapper _mapper;
         private readonly IRecipeReadOnlyRepository _repository;
+        private readonly IBlobStorageService _blobStorageService;
 
         public GetRecipeByIdUseCase(
             ILoggedUser loggedUser,
             IMapper mapper,
-            IRecipeReadOnlyRepository repository)
+            IRecipeReadOnlyRepository repository,
+            IBlobStorageService blobStorageService)
         {
             _loggedUser = loggedUser;
             _mapper = mapper;
             _repository = repository;
+            _blobStorageService = blobStorageService;
         }
 
         public async Task<ResponseRecipeJson> Execute(long recipeId)
@@ -34,9 +39,16 @@ namespace RecipeBook.Application.UseCases.Recipe.GetById
             if (recipe is null)
                 throw new NotFoundException(ResourceMessagesException.RECIPE_NOT_FOUND);
 
-            return _mapper.Map<ResponseRecipeJson>(recipe);
+            var response = _mapper.Map<ResponseRecipeJson>(recipe);
+
+            if (recipe.ImageIdentifier.NotEmpty())
+            {
+                var url = await _blobStorageService.GetFileUrl(loggedUser, recipe.ImageIdentifier);
+
+                response.ImageUrl = url;
+            }
             
-            
+            return response;
         }
     }
 }

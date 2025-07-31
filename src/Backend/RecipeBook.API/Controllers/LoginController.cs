@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using RecipeBook.Application.UseCases.Login.DoLogin;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
+using System.Security.Claims;
 
 namespace RecipeBook.API.Controllers
 {
@@ -18,5 +20,30 @@ namespace RecipeBook.API.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("google")]
+        public async Task<IActionResult> LoginGoogle(string returnUrl, [FromServices] IExternalLoginUseCase useCase)
+        {
+            var authenticate = await Request.HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+            if (IsNotAuthenticated(authenticate))
+            {
+                return Challenge(GoogleDefaults.AuthenticationScheme);
+            }
+            else
+            {
+                var claims = authenticate.Principal!.Identities.First().Claims;
+
+                var name = claims.First(c => c.Type == ClaimTypes.Name).Value;
+                var email = claims.First(c => c.Type == ClaimTypes.Email).Value;
+
+                var token = await useCase.Execute(name, email);
+
+                return Redirect($"{returnUrl}{token}");
+            }
+
+        }
+
     }
 }

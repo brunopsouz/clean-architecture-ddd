@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FileTypeChecker.Extensions;
+using FileTypeChecker.Types;
+using Microsoft.AspNetCore.Http;
+using RecipeBook.Application.Extensions;
+using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.Recipe;
 using RecipeBook.Domain.Services.LoggedUser;
+using RecipeBook.Domain.Services.Storage;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 
@@ -12,15 +17,18 @@ namespace RecipeBook.Application.UseCases.Recipe.Image
         private readonly ILoggedUser _loggedUser;
         private readonly IRecipeUpdateOnlyRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IBlobStorageService _blobStorageService;
 
         public AddUpdateImageCoverUseCase(
             ILoggedUser loggedUser,
             IRecipeUpdateOnlyRepository repository,
-            IUnitOfWork commit)
+            IUnitOfWork unitOfWork,
+            IBlobStorageService blobStorageService)
         {
             _loggedUser = loggedUser;
             _repository = repository;
-            _unitOfWork = commit;
+            _unitOfWork = unitOfWork;
+            _blobStorageService = blobStorageService;
         }
 
         public async Task Execute(long recipeId, IFormFile file)
@@ -34,7 +42,26 @@ namespace RecipeBook.Application.UseCases.Recipe.Image
                 throw new NotFoundException(ResourceMessagesException.RECIPE_NOT_FOUND);
             }
 
-        }
+            var fileStream = file.OpenReadStream();
 
+            (var isValidImage, var extension) = fileStream.ValidateAnGetImageExtension();
+
+            if (isValidImage.IsFalse())
+            {
+                throw new ErrorOnValidationException([ResourceMessagesException.ONLY_IMAGES_ACCEPTED]);
+            }
+
+            if (string.IsNullOrEmpty(recipe.ImageIdentifier))
+            {
+                recipe.ImageIdentifier = $"{Guid.NewGuid()}{extension}";
+
+                _repository.Update(recipe);
+
+                await _unitOfWork.Commit();
+            }
+
+            await _blobStorageService.Upload(loggedUser, fileStream, recipe.ImageIdentifier);
+
+        }
     }
 }

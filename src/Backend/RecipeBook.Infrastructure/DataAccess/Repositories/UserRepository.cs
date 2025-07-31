@@ -11,7 +11,7 @@ namespace RecipeBook.Infrastructure.DataAccess.Repositories
     /// GET     POST    PUT     DEL
     /// Etc...
     /// </summary>
-    public class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepository, IUserUpdateOnlyRepository
+    public class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepository, IUserUpdateOnlyRepository, IUserDeleteOnlyRepository
     {
         private readonly RecipeBookDbContext _dbContext;
 
@@ -45,6 +45,29 @@ namespace RecipeBook.Infrastructure.DataAccess.Repositories
         }
 
         public void Update(User user) => _dbContext.Users.Update(user);
-       
+
+        public async Task DeleteAccount(Guid userIdentifier)
+        {
+            var user = await _dbContext
+                .Users
+                .FirstOrDefaultAsync(user => user.UserIdentifier == userIdentifier);
+            
+            if (user is null)
+                return;
+
+            var recipes =  _dbContext.Recipes.Where(recipe => recipe.UserId == user.Id);
+
+            _dbContext.Recipes.RemoveRange(recipes);
+
+            _dbContext.Users.Remove(user);
+        }
+
+        public async Task<User?> GetByEmail(string email)
+        {
+            return await _dbContext
+                .Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(user => user.Active && user.Email.Equals(email));
+        }
     }
 }

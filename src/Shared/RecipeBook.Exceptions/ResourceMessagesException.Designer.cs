@@ -232,6 +232,15 @@ namespace RecipeBook.Exceptions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only images (PNG,JPG,JPEG) are accept..
+        /// </summary>
+        public static string ONLY_IMAGES_ACCEPTED {
+            get {
+                return ResourceManager.GetString("ONLY_IMAGES_ACCEPTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The current password is different. .
         /// </summary>
         public static string PASSWORD_DIFFERENT_CURRENT_PASSWORD {

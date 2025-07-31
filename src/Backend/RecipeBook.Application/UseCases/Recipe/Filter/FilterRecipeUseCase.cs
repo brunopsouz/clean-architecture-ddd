@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using MyRecipeBook.Application.UseCases.Recipe.Filter;
+using RecipeBook.Application.Extensions;
 using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
 using RecipeBook.Domain.Dtos;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories.Recipe;
 using RecipeBook.Domain.Services.LoggedUser;
+using RecipeBook.Domain.Services.Storage;
 using RecipeBook.Exceptions.ExceptionsBase;
 
 namespace RecipeBook.Application.UseCases.Recipe.Filter
@@ -15,15 +17,18 @@ namespace RecipeBook.Application.UseCases.Recipe.Filter
         private readonly IMapper _mapper;
         private readonly ILoggedUser _loggedUser;
         private readonly IRecipeReadOnlyRepository _repository;
+        private readonly IBlobStorageService _blobStorage;
 
         public FilterRecipeUseCase(
             IMapper mapper,
             ILoggedUser loggedUser,
-            IRecipeReadOnlyRepository repository)
+            IRecipeReadOnlyRepository repository,
+            IBlobStorageService blobStorage)
         {
             _mapper = mapper;
             _loggedUser = loggedUser;
             _repository = repository;
+            _blobStorage = blobStorage;
         }
 
         public async Task<ResponseRecipesJson> Execute(RequestFilterRecipeJson request)
@@ -44,7 +49,7 @@ namespace RecipeBook.Application.UseCases.Recipe.Filter
 
             return new ResponseRecipesJson
             {
-                Recipes = _mapper.Map<IList<ResponseShortRecipeJson>>(recipes)
+                Recipes = await recipes.MapToShortRecipeJson(loggedUser, _blobStorage, _mapper)
             };
         }
 

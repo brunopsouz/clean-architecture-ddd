@@ -1,10 +1,12 @@
-﻿using FluentMigrator.Runner;
+﻿using Azure.Messaging.ServiceBus;
+using Azure.Storage.Blobs;
+using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RecipeBook.Infrastructure.Services.OpenAI;
 using OpenAI.Chat;
 using RecipeBook.Domain.Enums;
+using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.Recipe;
 using RecipeBook.Domain.Repositories.User;
@@ -12,6 +14,8 @@ using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Domain.Services.LoggedUser;
 using RecipeBook.Domain.Services.OpenAI;
+using RecipeBook.Domain.Services.ServiceBus;
+using RecipeBook.Domain.Services.Storage;
 using RecipeBook.Domain.ValueObjects;
 using RecipeBook.Infrastructure.DataAccess;
 using RecipeBook.Infrastructure.DataAccess.Repositories;
@@ -20,6 +24,9 @@ using RecipeBook.Infrastructure.Security.Criptography;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
 using RecipeBook.Infrastructure.Services.LoggedUser;
+using RecipeBook.Infrastructure.Services.OpenAI;
+using RecipeBook.Infrastructure.Services.ServiceBus;
+using RecipeBook.Infrastructure.Services.Storage;
 using System.Reflection;
 
 
@@ -38,12 +45,14 @@ namespace RecipeBook.Infrastructure
         /// <param name="services"></param>
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            AddQueue(services, configuration);
             AddOpenAI(services, configuration);
             AddPasswordEncrypter(services, configuration);
             AddRepositories(services);
             AddLoggerUser(services);
             AddTokens(services, configuration);
-            
+            AddAzureStorage(services, configuration);
+
 
             // método que vai verificar se o ambiente é de teste integração (banco de dados inMemory).
             if (configuration.IsUnitTestEnvironment())
@@ -88,6 +97,7 @@ namespace RecipeBook.Infrastructure
             services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
             services.AddScoped<IUserReadOnlyRepository, UserRepository>();
             services.AddScoped<IUserUpdateOnlyRepository, UserRepository>();
+            services.AddScoped<IUserDeleteOnlyRepository, UserRepository>();
             services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
             services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
             services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
@@ -137,5 +147,35 @@ namespace RecipeBook.Infrastructure
             services.AddScoped(c => new ChatClient(RecipeBookRuleConstants.CHAT_MODEL, apiKey));
         }
 
+        private static void AddAzureStorage(IServiceCollection services, IConfiguration configuration)
+        {
+            var connectionString = configuration.GetValue<string>("Settings:BlobStorage:Azure");
+
+            if (connectionString.NotEmpty())
+            {
+                services.AddScoped<IBlobStorageService>(c => new AzureStorageService(new BlobServiceClient(connectionString)));
+            }
+        }
+
+        private static void AddQueue(IServiceCollection services, IConfiguration configuration)
+        {
+            var connectionString = configuration.GetValue<string>("Settings:ServiceBus:DeleteUserAccount");
+
+            var client = new ServiceBusClient(connectionString, new ServiceBusClientOptions
+            {
+                TransportType = ServiceBusTransportType.AmqpWebSockets
+            });
+
+            var deleteQueue = new DeleteUserQueue(client.CreateSender("user"));
+
+            var deleteUserProcessor = new DeleteUserProcessor(client.CreateProcessor("user", new ServiceBusProcessorOptions
+            {
+                MaxConcurrentCalls = 1
+            }));
+
+            services.AddSingleton(deleteUserProcessor);
+
+            services.AddScoped<IDeleteUserQueue>(c => deleteQueue);
+        }
     }
 }

@@ -5,6 +5,7 @@ using RecipeBook.API.Binders;
 using RecipeBook.Application.UseCases.Recipe.Delete;
 using RecipeBook.Application.UseCases.Recipe.Generate;
 using RecipeBook.Application.UseCases.Recipe.GetById;
+using RecipeBook.Application.UseCases.Recipe.Image;
 using RecipeBook.Application.UseCases.Recipe.Register;
 using RecipeBook.Application.UseCases.Recipe.Update;
 using RecipeBook.Communication.Requests;
@@ -20,7 +21,7 @@ public class RecipeController : RecipeBookBaseController
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register(
         [FromServices] IRegisterRecipeUseCase useCase,
-        [FromBody] RequestRecipeJson request)
+        [FromForm] RequestRegisterRecipeFormData request)
     {
         var response = await useCase.Execute(request);
 
