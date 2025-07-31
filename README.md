@@ -1,6 +1,6 @@
-# 🍽️ RecipeBook - Projeto Acadêmico
+# 🍽️ RecipeBook 
 
-Este é um projeto acadêmico desenvolvido como parte de um curso voltado para aprimoramento técnico em desenvolvimento backend com foco em **boas práticas**, **arquitetura de software** e **entregas ágeis**.
+Este é um projeto desenvolvido como parte de um recurso voltado para aprimoramento técnico em desenvolvimento backend com foco em **boas práticas**, **arquitetura de software** e **entregas ágeis**.
 
 O sistema consiste em uma API para gerenciamento de receitas culinárias com autenticação segura, integrações modernas e padrões de qualidade utilizados no mercado.
 
