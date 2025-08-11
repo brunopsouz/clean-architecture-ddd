@@ -1,4 +1,4 @@
-# 🍽️ RecipeBook 
+# RecipeBook 
 
 Este é um projeto desenvolvido como parte de um recurso voltado para aprimoramento técnico em desenvolvimento backend com foco em **boas práticas**, **arquitetura de software** e **entregas ágeis**.
 
@@ -6,39 +6,39 @@ O sistema consiste em uma API para gerenciamento de receitas culinárias com aut
 
 ---
 
-## 🚀 Tecnologias e Práticas Utilizadas
+## Tecnologias e Práticas Utilizadas
 
-### 🧠 Arquitetura & Design
-- 🔷 **Domain-Driven Design (DDD)**
-- 🧱 **SOLID Principles**
-- 🧼 **Clean Code**
-- 🧪 **Testes de Unidade e Integração**
-- 📦 **Injeção de Dependência (DI)** com `Microsoft.Extensions.DependencyInjection`
-- 🧭 **Design modular e separação de responsabilidades**
+### Arquitetura & Design
+- **Domain-Driven Design (DDD)**
+- **SOLID Principles**
+- **Clean Code**
+- **Testes de Unidade e Integração**
+- **Injeção de Dependência (DI)** com `Microsoft.Extensions.DependencyInjection`
+- **Design modular e separação de responsabilidades**
 
-### 🛠️ Ferramentas & DevOps
-- ☁️ **Azure DevOps** para boards, repositórios e pipelines
-- 🔄 **CI/CD com Pipelines**
-- 🐳 **Docker** para containerização da aplicação
-- 🔍 **SonarCloud & SonarQube** para análise estática de código
-- 🧪 **FluentValidation** para validação de dados
-- 📚 **Migrations do banco de dados** via Entity Framework
+###  Ferramentas & DevOps
+- **Azure DevOps** para boards, repositórios e pipelines
+- **CI/CD com Pipelines**
+- **Docker** para containerização da aplicação
+- **SonarCloud & SonarQube** para análise estática de código
+- **FluentValidation** para validação de dados
+- **Migrations do banco de dados** via Entity Framework
 
-### ⚙️ Backend & Infraestrutura
-- 🌐 **ASP.NET Core**
-- 🗄️ **Entity Framework Core**
-- 🔐 **Autenticação com Google Login**
-- 🛡️ **JWT e Refresh Tokens** para autenticação segura
-- 📬 **Mensageria (eventualmente com RabbitMQ ou outros brokers)**
+### Backend & Infraestrutura
+- **ASP.NET Core**
+- **Entity Framework Core**
+- **Autenticação com Google Login**
+- **JWT e Refresh Tokens** para autenticação segura
+- **Mensageria (eventualmente com RabbitMQ ou outros brokers)**
 
-### 📈 Metodologia
-- 🧩 **SCRUM** com sprints e entregas contínuas
-- 🧪 **Git & GitFlow** para versionamento e fluxo de desenvolvimento
-- 🤖 **Integração com ChatGPT** como apoio à produtividade e revisão
+### Metodologia
+- **SCRUM** com sprints e entregas contínuas
+- **Git & GitFlow** para versionamento e fluxo de desenvolvimento
+- **Integração com ChatGPT** como apoio à produtividade e revisão
 
 ---
 
-## 📸 Funcionalidades
+## Funcionalidades
 
 - Cadastro, edição e remoção de receitas
 - Autenticação e login com conta Google
@@ -52,7 +52,7 @@ O sistema consiste em uma API para gerenciamento de receitas culinárias com aut
 
 ---
 
-## 🏁 Como executar
+## Como executar
 
 ```bash
 # Clonar o repositório
