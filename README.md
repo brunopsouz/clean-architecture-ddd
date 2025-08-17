@@ -29,7 +29,7 @@ O sistema consiste em uma API para gerenciamento de receitas culinárias com aut
 - **Entity Framework Core**
 - **Autenticação com Google Login**
 - **JWT e Refresh Tokens** para autenticação segura
-- **Mensageria (eventualmente com RabbitMQ ou outros brokers)**
+- **Mensageria (Azure Service Bus)**
 
 ### Metodologia
 - **SCRUM** com sprints e entregas contínuas
