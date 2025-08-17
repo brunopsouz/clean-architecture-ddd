@@ -44,7 +44,6 @@ O sistema consiste em uma API para gerenciamento de receitas culinárias com aut
 - Autenticação e login com conta Google
 - Perfil de usuário e alteração de senha
 - Tokens JWT + Refresh Token
-- Integração com API externa (ex: WakeCommerce)
 - Logs e tratamento global de exceções
 - Testes automatizados e cobertura de código
 - Regras de negócio validadas com FluentValidation
