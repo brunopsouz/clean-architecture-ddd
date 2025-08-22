@@ -43,11 +43,11 @@ namespace UseCases.Test.User.Register
 
             //Espera-se entrar na função "Execute()" e esperar um erro de e-mail já cadastrado. 
             (await Should.ThrowAsync<ErrorOnValidationException>(act))
-                .ErrorMessages.Count.ShouldBe(1);
+                .GetErrorMessages().Count.ShouldBe(1);
 
             //Espera-se entrar na função "Execute()" e esperar um erro de e-mail já cadastrado. 
             (await Should.ThrowAsync<ErrorOnValidationException>(act))
-                .ErrorMessages.ShouldContain(ResourceMessagesException.EMAIL_ALREADY_REGISTERED);
+                .GetErrorMessages().ShouldContain(ResourceMessagesException.EMAIL_ALREADY_REGISTERED);
 
             //var exception = await Should.ThrowAsync<ErrorOnValidationException>(act);
             //exception.ErrorMessages.Count.ShouldBe(1);
@@ -71,10 +71,10 @@ namespace UseCases.Test.User.Register
 
 
             (await Should.ThrowAsync<ErrorOnValidationException>(act))
-                .ErrorMessages.Count.ShouldBe(1);
+                .GetErrorMessages().Count.ShouldBe(1);
 
             (await Should.ThrowAsync<ErrorOnValidationException>(act))
-                .ErrorMessages.ShouldContain(ResourceMessagesException.NAME_EMPTY);
+                .GetErrorMessages().ShouldContain(ResourceMessagesException.NAME_EMPTY);
 
             //var exception = await Should.ThrowAsync<ErrorOnValidationException>(act);
             //exception.ErrorMessages.Count.ShouldBe(1);

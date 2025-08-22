@@ -1,7 +1,9 @@
-﻿using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.BlobStorage;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using Microsoft.IdentityModel.Tokens.Experimental;
 using RecipeBook.Application.UseCases.Recipe.Delete;
+using RecipeBook.Domain.Entities;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 using Shouldly;
@@ -45,7 +47,9 @@ namespace UseCases.Test.Recipe.Delete
             var repositoryRead = new RecipeReadOnlyRepositoryBuilder().GetById(user, recipe).Build();
             var repositoryWrite = RecipeWriteOnlyRepositoryBuilder.Build();
             var unitOfWork = UnitOfWorkBuilder.Build();
-            return new DeleteRecipeUseCase(loggedUser, repositoryRead, repositoryWrite, unitOfWork);
+            var blobStorage = new BlobStorageServiceBuilder().GetFileUrl(user, recipe?.ImageIdentifier).Build();
+
+            return new DeleteRecipeUseCase(loggedUser, repositoryRead, repositoryWrite, unitOfWork, blobStorage);
 
         }
     }

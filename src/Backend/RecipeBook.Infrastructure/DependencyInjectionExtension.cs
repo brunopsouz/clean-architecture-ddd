@@ -9,6 +9,7 @@ using RecipeBook.Domain.Enums;
 using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories;
 using RecipeBook.Domain.Repositories.Recipe;
+using RecipeBook.Domain.Repositories.Token;
 using RecipeBook.Domain.Repositories.User;
 using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
@@ -23,6 +24,7 @@ using RecipeBook.Infrastructure.Extensions;
 using RecipeBook.Infrastructure.Security.Criptography;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using RecipeBook.Infrastructure.Security.Tokens.Access.Validator;
+using RecipeBook.Infrastructure.Security.Tokens.Refresh;
 using RecipeBook.Infrastructure.Services.LoggedUser;
 using RecipeBook.Infrastructure.Services.OpenAI;
 using RecipeBook.Infrastructure.Services.ServiceBus;
@@ -47,7 +49,7 @@ namespace RecipeBook.Infrastructure
         {
             AddQueue(services, configuration);
             AddOpenAI(services, configuration);
-            AddPasswordEncrypter(services, configuration);
+            AddPasswordEncrypter(services);
             AddRepositories(services);
             AddLoggerUser(services);
             AddTokens(services, configuration);
@@ -101,6 +103,7 @@ namespace RecipeBook.Infrastructure
             services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
             services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
             services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
+            services.AddScoped<ITokenRepository, TokenRepository>();
         }
 
         private static void AddFluentMigrator_SqlServer(IServiceCollection services, IConfiguration configuration)
@@ -123,6 +126,8 @@ namespace RecipeBook.Infrastructure
 
             services.AddScoped<IAccessTokenGenerator>(option => new JwtTokenGenerator(expirationTimeMinutes, signingKey!));
             services.AddScoped<IAccessTokenValidator>(option => new JwtTokenValidator(signingKey!));
+            services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
+
         }
 
         private static void AddLoggerUser(IServiceCollection services)
@@ -130,12 +135,12 @@ namespace RecipeBook.Infrastructure
             services.AddScoped<ILoggedUser, LoggedUser>();
         }
 
-        private static void AddPasswordEncrypter(IServiceCollection services, IConfiguration configuration)
+        private static void AddPasswordEncrypter(IServiceCollection services)
         {
-            ///Microsoft.Extensions.Configuration.Binder
-            var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
+            /////Microsoft.Extensions.Configuration.Binder
+            //var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
 
-            services.AddScoped<IPasswordEncripter>(options => new Sha512Encripter(additionalKey!));
+            services.AddScoped<IPasswordEncripter, BCryptNet>();
         }
 
         private static void AddOpenAI(IServiceCollection services, IConfiguration configuration)
@@ -159,7 +164,10 @@ namespace RecipeBook.Infrastructure
 
         private static void AddQueue(IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetValue<string>("Settings:ServiceBus:DeleteUserAccount");
+            var connectionString = configuration.GetValue<string>("Settings:ServiceBus:DeleteUserAccount")!;
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+                return;
 
             var client = new ServiceBusClient(connectionString, new ServiceBusClientOptions
             {
@@ -175,7 +183,7 @@ namespace RecipeBook.Infrastructure
 
             services.AddSingleton(deleteUserProcessor);
 
-            services.AddScoped<IDeleteUserQueue>(c => deleteQueue);
+            services.AddScoped<IDeleteUserQueue>(options => deleteQueue);
         }
     }
 }

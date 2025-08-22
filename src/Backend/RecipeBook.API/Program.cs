@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using RecipeBook.API.BackgroundServices;
 using RecipeBook.API.Converters;
@@ -8,8 +9,10 @@ using RecipeBook.API.Filters;
 using RecipeBook.API.Middleware;
 using RecipeBook.API.Token;
 using RecipeBook.Application;
+using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Security.Tokens;
 using RecipeBook.Infrastructure;
+using RecipeBook.Infrastructure.DataAccess;
 using RecipeBook.Infrastructure.Extensions;
 using RecipeBook.Infrastructure.Migrations;
 
@@ -68,11 +71,26 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddHostedService<DeleteUserService>();
+if (builder.Configuration.IsUnitTestEnvironment().IsFalse()) 
+{
+    builder.Services.AddHostedService<DeleteUserService>();
 
-AddGoogleAuthentication();
+    AddGoogleAuthentication();
+}
+
+builder.Services.AddHealthChecks().AddDbContextCheck<RecipeBookDbContext>();
 
 var app = builder.Build();
+
+app.MapHealthChecks("/Health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    AllowCachingResponses = false,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
+    }
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -123,6 +141,9 @@ void MigrateDatabase()
 
 void AddGoogleAuthentication()
 {
+    if (builder.Environment.IsEnvironment("Test"))
+        return;
+
     var clientId = builder.Configuration.GetValue<string>("Settings:Google:ClientId")!;
     var clientSecret = builder.Configuration.GetValue<string>("Settings:Google:ClientSecret")!;
 

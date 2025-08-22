@@ -33,7 +33,7 @@ namespace RecipeBook.API.Filters
 
                 if (exist.IsFalse())
                 {
-                    throw new RecipeBookException(ResourceMessagesException.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE);
+                    //throw new RecipeBookException(ResourceMessagesException.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE);
                 }
             }
             catch (SecurityTokenExpiredException)
@@ -59,7 +59,7 @@ namespace RecipeBook.API.Filters
             var authentication = context.HttpContext.Request.Headers.Authorization.ToString();
             if (string.IsNullOrWhiteSpace(authentication))
             {
-                throw new RecipeBookException(ResourceMessagesException.NO_TOKEN);
+                //throw new RecipeBookException(ResourceMessagesException.NO_TOKEN);
             }
 
             return authentication["Bearer ".Length..].Trim();

@@ -1,9 +1,13 @@
-﻿using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.BlobStorage;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.idEncryption;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using RecipeBook.API.BackgroundServices;
+using RecipeBook.Domain.Entities;
 using RecipeBook.Domain.Enums;
 using RecipeBook.Infrastructure.DataAccess;
 
@@ -18,6 +22,7 @@ namespace WebApi.Test
 
         private RecipeBook.Domain.Entities.Recipe _recipe = default!;
         private RecipeBook.Domain.Entities.User _user = default!;
+        private RecipeBook.Domain.Entities.RefreshToken _refreshToken = default!;
         private string _password = string.Empty;
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -40,11 +45,25 @@ namespace WebApi.Test
 
                     //Aqui estou adicionando o banco de dados em memória, substituto do banco de dados existente.
                     var provider = services.AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
+
+                    var blobStorage = new BlobStorageServiceBuilder().Build();
+                    services.AddScoped(option => blobStorage);
+
                     services.AddDbContext<RecipeBookDbContext>(options =>
                     {
                         options.UseInMemoryDatabase("InMemoryDbForTesting");
                         options.UseInternalServiceProvider(provider);
                     });
+
+                    // Remove background service não necessário nos testes
+                    var deleteUserServiceDescriptor = services.SingleOrDefault(
+                        d => d.ServiceType == typeof(IHostedService) &&
+                             d.ImplementationType == typeof(DeleteUserService));
+
+                    if (deleteUserServiceDescriptor is not null)
+                    {
+                        services.Remove(deleteUserServiceDescriptor);
+                    }
 
                     // p/ criar teste de integração de Login.
                     // Remove o banco de dados existente para garantir que os testes comecem com um estado limpo.
@@ -63,22 +82,17 @@ namespace WebApi.Test
         }
 
         public string GetEmail() => _user.Email;
-
         public string GetPassword() => _password;
-
         public string GetName() => _user.Name;
-
+        public string GetRefreshToken() => _refreshToken.Value;
         public Guid GetUserIdentifier() => _user.UserIdentifier;
 
+
         public string GetRecipeId() => IdEncripterBuilder.Build().Encode(_recipe.Id);
-
         public string GetRecipeTitle() => _recipe.Title;
-
         public Difficulty GetRecipeDifficulty() => _recipe.Difficulty!.Value;
-
         public CookingTime GetRecipeCookingTime() => _recipe.CookingTime!.Value;
-
-        public IList<DishType> GetDishTypes() => _recipe.DishTypes.Select(c => c.Type).ToList();
+        public IList<RecipeBook.Communication.Enums.DishType> GetDishTypes() => (IList<RecipeBook.Communication.Enums.DishType>)_recipe.DishTypes.Select(c => c.Type).ToList();
 
         private void StartDatabase(RecipeBookDbContext dbContext)
         {
@@ -86,9 +100,13 @@ namespace WebApi.Test
 
             _recipe = RecipeBuilder.Build(_user);
 
+            _refreshToken = RefreshTokenBuilder.Build(_user);
+
             dbContext.Users.Add(_user);
 
             dbContext.Recipes.Add(_recipe);
+
+            dbContext.RefreshTokens.Add(_refreshToken);
 
             dbContext.SaveChanges();
 

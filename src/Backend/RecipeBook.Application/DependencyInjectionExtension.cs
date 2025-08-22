@@ -4,6 +4,7 @@ using MyRecipeBook.Application.UseCases.Recipe.Filter;
 using RecipeBook.Application.Services.AutoMapper;
 using RecipeBook.Application.UseCases.Dashboard;
 using RecipeBook.Application.UseCases.Login.DoLogin;
+using RecipeBook.Application.UseCases.Login.External;
 using RecipeBook.Application.UseCases.Recipe.Delete;
 using RecipeBook.Application.UseCases.Recipe.Filter;
 using RecipeBook.Application.UseCases.Recipe.Generate;
@@ -11,7 +12,10 @@ using RecipeBook.Application.UseCases.Recipe.GetById;
 using RecipeBook.Application.UseCases.Recipe.Image;
 using RecipeBook.Application.UseCases.Recipe.Register;
 using RecipeBook.Application.UseCases.Recipe.Update;
+using RecipeBook.Application.UseCases.Token;
 using RecipeBook.Application.UseCases.User.ChangePassword;
+using RecipeBook.Application.UseCases.User.Delete;
+using RecipeBook.Application.UseCases.User.Delete.Delete;
 using RecipeBook.Application.UseCases.User.Profile;
 using RecipeBook.Application.UseCases.User.Register;
 using RecipeBook.Application.UseCases.User.Update;
@@ -65,6 +69,10 @@ namespace RecipeBook.Application
             services.AddScoped<IGetDashboardUseCase, GetDashboardUseCase>();
             services.AddScoped<IGenerateRecipeUseCase, GenerateRecipeUseCase>();
             services.AddScoped<IAddUpdateImageCoverUseCase, AddUpdateImageCoverUseCase>();
+            services.AddScoped<IRequestDeleteUserUseCase, RequestDeleteUserUseCase>();
+            services.AddScoped<IDeleteUserAccountUseCase, DeleteUserAccountUseCase>();
+            services.AddScoped<IExternalLoginUseCase, ExternalLoginUseCase>();
+            //services.AddScoped<IUseRefreshTokenUseCase, UseRefreshTokenUseCase>();
         }
 
     }

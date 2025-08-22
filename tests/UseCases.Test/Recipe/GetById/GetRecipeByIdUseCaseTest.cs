@@ -1,7 +1,9 @@
-﻿using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.BlobStorage;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using RecipeBook.Application.UseCases.Recipe.GetById;
+using RecipeBook.Domain.Entities;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 using Shouldly;
@@ -48,8 +50,9 @@ namespace UseCases.Test.Recipe.GetById
             var loggedUser = LoggedUserBuilder.Build(user);
             var mapper = MapperBuilder.Build();
             var repository = new RecipeReadOnlyRepositoryBuilder().GetById(user, recipe).Build();
+            var blobStorage = new BlobStorageServiceBuilder().GetFileUrl(user, recipe?.ImageIdentifier).Build();
 
-            return new GetRecipeByIdUseCase(loggedUser, mapper, repository);
+            return new GetRecipeByIdUseCase(loggedUser, mapper, repository, blobStorage);
         }
 
     }

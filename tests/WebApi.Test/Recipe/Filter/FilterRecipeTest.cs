@@ -28,7 +28,7 @@ public class FilterRecipeTest : RecipeBookClassFixture
         _recipeTitle = factory.GetRecipeTitle();
         _recipeCookingTime = factory.GetRecipeCookingTime();
         _recipedifficultyLevel = factory.GetRecipeDifficulty();
-        _recipeDishTypes = factory.GetDishTypes();
+        _recipeDishTypes = (IList<RecipeBook.Domain.Enums.DishType>?)factory.GetDishTypes();
     }
 
     [Fact]

@@ -8,7 +8,7 @@ public class NotFoundException : RecipeBookException
     {
     }
 
-    //public override IList<string> GetErrorMessages() => [Message];
+    public override IList<string> GetErrorMessages() => [Message];
 
-    //public override HttpStatusCode GetStatusCode() => HttpStatusCode.NotFound;
+    public override HttpStatusCode GetStatusCode() => HttpStatusCode.NotFound;
 }

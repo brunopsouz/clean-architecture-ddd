@@ -12,8 +12,8 @@ namespace RecipeBook.API.Filters
     {
         public void OnException(ExceptionContext context)
         {
-            if (context.Exception is RecipeBookException)
-                HandleProjectException(context);
+            if (context.Exception is RecipeBookException recipeBookException)
+                HandleProjectException(recipeBookException, context);
             else
                 ThrowUnknowException(context);
         }
@@ -22,9 +22,12 @@ namespace RecipeBook.API.Filters
         ///     Posso criar um metodo privado somente dessa classe, que é usado no método principal como auxilio.
         /// </summary>
         /// <param name="context"></param>
-        private static void HandleProjectException(ExceptionContext context)
+        private static void HandleProjectException(RecipeBookException recipeBookException, ExceptionContext context)
         {
-            if (context.Exception is InvalidLoginException)
+            context.HttpContext.Response.StatusCode = (int)recipeBookException.GetStatusCode();
+            context.Result = new ObjectResult(new ResponseErrorJson(recipeBookException.GetErrorMessages()));
+
+            /*if (context.Exception is InvalidLoginException)
             {
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 context.Result = new UnauthorizedObjectResult(new ResponseErrorJson(context.Exception.Message));
@@ -40,12 +43,12 @@ namespace RecipeBook.API.Filters
             {
                 context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                 context.Result = new NotFoundObjectResult(new ResponseErrorJson(context.Exception.Message));
-            }
+            }*/
         }
 
         private static void ThrowUnknowException(ExceptionContext context)
         {
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Result = new ObjectResult(new ResponseErrorJson(ResourceMessagesException.UNKNOWN_ERROR));
         }
     }

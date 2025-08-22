@@ -1,8 +1,10 @@
-﻿using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.BlobStorage;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using RecipeBook.Application.UseCases.Recipe.Register;
+using RecipeBook.Domain.Entities;
 using RecipeBook.Exceptions;
 using RecipeBook.Exceptions.ExceptionsBase;
 using Shouldly;
@@ -17,7 +19,7 @@ namespace UseCases.Test.Recipe.Register
         {
             (var user, _) = UserBuilder.Build();
             
-            var request = RequestRecipeJsonBuilder.Build();
+            var request = RequestRegisterRecipeFormDataBuilder.Build();
 
             var useCase = CreateUseCase(user);
 
@@ -34,7 +36,7 @@ namespace UseCases.Test.Recipe.Register
         {
             (var user, _) = UserBuilder.Build();
 
-            var request = RequestRecipeJsonBuilder.Build();
+            var request = RequestRegisterRecipeFormDataBuilder.Build();
             request.Title = string.Empty;
 
             var useCase = CreateUseCase(user);
@@ -42,8 +44,8 @@ namespace UseCases.Test.Recipe.Register
             Func<Task> action = async () => { await useCase.Execute(request); };
 
             var exception = await Should.ThrowAsync<ErrorOnValidationException>(action);
-            exception.ErrorMessages.Count.ShouldBe(1);
-            exception.ErrorMessages.ShouldContain(ResourceMessagesException.RECIPE_TITLE_EMPTY);
+            exception.GetErrorMessages().Count.ShouldBe(1);
+            exception.GetErrorMessages().ShouldContain(ResourceMessagesException.RECIPE_TITLE_EMPTY);
         }
 
         private static RegisterRecipeUseCase CreateUseCase(RecipeBook.Domain.Entities.User user)
@@ -60,8 +62,9 @@ namespace UseCases.Test.Recipe.Register
             var loggedUser = LoggedUserBuilder.Build(user);
             var unitOfWork = UnitOfWorkBuilder.Build();
             var mapper = MapperBuilder.Build();
+            var blobStorage = new BlobStorageServiceBuilder().Build();
 
-            return new RegisterRecipeUseCase(writeRepository, loggedUser, unitOfWork, mapper);
+            return new RegisterRecipeUseCase(writeRepository, loggedUser, unitOfWork, mapper, blobStorage);
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.BlobStorage;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
@@ -45,8 +46,8 @@ namespace UseCases.Test.Recipe.Filter
             Func<Task> action = async () => { await useCase.Execute(request); };
 
             var exception = await Should.ThrowAsync<ErrorOnValidationException>(action);
-            exception.ErrorMessages.Count.ShouldBe(1);
-            exception.ErrorMessages.ShouldContain(ResourceMessagesException.COOKING_TIME_NOT_SUPPORTED);
+            exception.GetErrorMessages().Count.ShouldBe(1);
+            exception.GetErrorMessages().ShouldContain(ResourceMessagesException.COOKING_TIME_NOT_SUPPORTED);
         }
 
         private static FilterRecipeUseCase CreateUseCase(
@@ -56,8 +57,9 @@ namespace UseCases.Test.Recipe.Filter
             var mapper = MapperBuilder.Build();
             var loggedUser = LoggedUserBuilder.Build(user);
             var repository = new RecipeReadOnlyRepositoryBuilder().Filter(user, recipes).Build();
+            var blobStorage = new BlobStorageServiceBuilder().GetFileUrl(user, recipes).Build();
 
-            return new FilterRecipeUseCase(mapper, loggedUser, repository);
+            return new FilterRecipeUseCase(mapper, loggedUser, repository, blobStorage);
         }
     }
 }

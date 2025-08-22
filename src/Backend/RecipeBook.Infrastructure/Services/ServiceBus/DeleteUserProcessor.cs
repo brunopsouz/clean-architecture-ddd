@@ -11,9 +11,6 @@ namespace RecipeBook.Infrastructure.Services.ServiceBus
             _processor = processor;
         }
 
-        public ServiceBusProcessor GetProcessor()
-        {
-            return _processor;
-        }
+        public ServiceBusProcessor GetProcessor() => _processor;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using RecipeBook.Communication.Requests;
 using RecipeBook.Communication.Responses;
+using RecipeBook.Domain.Extensions;
 using RecipeBook.Domain.Repositories.User;
 using RecipeBook.Domain.Security.Cryptography;
 using RecipeBook.Domain.Security.Tokens;
@@ -27,7 +28,13 @@ namespace RecipeBook.Application.UseCases.Login.DoLogin
         {
             var encryptedPassword = _passwordEncripter.Encrypt(requestLoginJson.Password);
 
-            var user = await _repository.GetByEmailAndPassword(requestLoginJson.Email, encryptedPassword) ?? throw new InvalidLoginException();
+            var user = await _repository.GetByEmail(requestLoginJson.Email);
+
+            if (user is null || _passwordEncripter.IsValid(requestLoginJson.Password, user.Password).IsFalse())
+            {
+                throw new InvalidLoginException();
+            }
+
             return new ResponseRegisteredUserJson
             {
                 Name = user.Name,

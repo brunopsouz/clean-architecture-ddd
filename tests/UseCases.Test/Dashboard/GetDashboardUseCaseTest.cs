@@ -1,4 +1,5 @@
-﻿using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.BlobStorage;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using RecipeBook.Application.UseCases.Dashboard;
@@ -43,9 +44,10 @@ namespace UseCases.Test.Dashboard
             var repository = new RecipeReadOnlyRepositoryBuilder().GetForDashboard(user, recipes).Build();
             var mapper = MapperBuilder.Build();
             var loggedUser = LoggedUserBuilder.Build(user);
+            var blobStorage = new BlobStorageServiceBuilder().GetFileUrl(user, recipes).Build();
 
 
-            return new GetDashboardUseCase(repository, mapper, loggedUser);
+            return new GetDashboardUseCase(repository, mapper, loggedUser, blobStorage);
         }
 
     }

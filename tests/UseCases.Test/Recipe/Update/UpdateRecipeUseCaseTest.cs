@@ -62,8 +62,8 @@ namespace UseCases.Test.Recipe.Update
             Func<Task> action = async () => await useCase.Execute(recipe.Id, request);
 
             var exception = await Should.ThrowAsync<ErrorOnValidationException>(action);
-            exception.ErrorMessages.Count.ShouldBe(1);
-            exception.ErrorMessages.ShouldContain(ResourceMessagesException.RECIPE_TITLE_EMPTY);
+            exception.GetErrorMessages().Count.ShouldBe(1);
+            exception.GetErrorMessages().ShouldContain(ResourceMessagesException.RECIPE_TITLE_EMPTY);
         }
 
 
