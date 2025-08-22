@@ -1,7 +1,7 @@
 # RecipeBook 
 
 Este é um projeto desenvolvido como parte de um recurso voltado para aprimoramento técnico em desenvolvimento backend com foco em **boas práticas**, **arquitetura de software** e **entregas ágeis**.
-
+Desenvolvimento de projeto completo utilizando serviços da `Azure`, como `Service Bus`, `Blob Storage`, containers `Docker` e deployment automatizado com `pipelines`.
 O sistema consiste em uma API para gerenciamento de receitas culinárias com autenticação segura, integrações modernas e padrões de qualidade utilizados no mercado.
 
 ---
