@@ -192,6 +192,12 @@ FakesAssemblies/
 # Arquivos de configuração locais
 appsettings.Development.json
 
+# Ignorar arquivos de configuração locais em qualquer pasta
+**/appsettings.Development.json
+
+# Ignorar json
+src/Backend/RecipeBook.API/appsettings*.json
+
 .vscode/settings.json
 
 /.sonarqube
